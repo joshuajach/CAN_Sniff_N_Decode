@@ -1,0 +1,58 @@
+JFDML JFormDesigner: "8.1.0.0.283" Java: "17.0.7" encoding: "UTF-8"
+
+new FormModel {
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class net.miginfocom.swing.MigLayout ) {
+			"$layoutConstraints": "insets 0,hidemode 3"
+			"$columnConstraints": "[350,grow,fill]0[grow,fill]"
+			"$rowConstraints": "2[]2[grow,fill]0[grow,fill]0"
+		} ) {
+			name: "this"
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label1"
+				"text": "CanID"
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 0 0"
+			} )
+			add( new FormComponent( "javax.swing.JComboBox" ) {
+				name: "CanIdSelectBox"
+				auxiliary() {
+					"JavaCodeGenerator.variableModifiers": 1
+				}
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "CanIdSelectBox", true ) )
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 0 0"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "dataPackLabel"
+				"text": "text"
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 1 0,alignx center,growx 0"
+			} )
+			add( new FormComponent( "CanValue" ) {
+				name: "canValue1"
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 0 1"
+			} )
+			add( new FormComponent( "CanValue" ) {
+				name: "canValue2"
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 1 1"
+			} )
+			add( new FormComponent( "CanValue" ) {
+				name: "canValue3"
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 0 2"
+			} )
+			add( new FormComponent( "CanValue" ) {
+				name: "canValue4"
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 1 2"
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 0, 0 )
+			"size": new java.awt.Dimension( 555, 275 )
+		} )
+	}
+}

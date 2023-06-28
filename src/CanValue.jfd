@@ -1,0 +1,108 @@
+JFDML JFormDesigner: "8.1.0.0.283" Java: "17.0.7" encoding: "UTF-8"
+
+new FormModel {
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class net.miginfocom.swing.MigLayout ) {
+			"$layoutConstraints": "insets 0,hidemode 3,gap 5 5"
+			"$columnConstraints": "[52:55,shrink 0,right][45:45,shrink 0,fill][90,fill][grow,fill]"
+			"$rowConstraints": "[center]0[25,shrink 0,center]0[25,shrink 0,center]0[25,shrink 0,center]0[25,shrink 0]0[grow]"
+		} ) {
+			name: "this"
+			"minimumSize": new java.awt.Dimension( 200, 125 )
+			"maximumSize": new java.awt.Dimension( 5000, 5000 )
+			"preferredSize": new java.awt.Dimension( 350, 150 )
+			"border": new javax.swing.border.LineBorder( sfield java.awt.Color black, 1, false )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "textField7"
+				"text": "Name"
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 0 0 2 1,dock center"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "valueLabel"
+				"text": "Value"
+				auxiliary() {
+					"JavaCodeGenerator.variableModifiers": 1
+				}
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 2 0"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label1"
+				"text": "Bit Start"
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 0 1"
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "bitStartField"
+				"text": "0"
+				"minimumSize": new java.awt.Dimension( 20, 22 )
+				auxiliary() {
+					"JavaCodeGenerator.variableModifiers": 1
+				}
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 1 1"
+			} )
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+				"$horizontalGroup": "par l {space :0:88:x}"
+				"$verticalGroup": "par l {space :0:101:x}"
+			} ) {
+				name: "graphPanel"
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 2 1 2 5,dock center"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label2"
+				"text": "Bit Length"
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 0 2"
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "bitLengthField"
+				"text": "16"
+				"minimumSize": new java.awt.Dimension( 20, 22 )
+				auxiliary() {
+					"JavaCodeGenerator.variableModifiers": 1
+				}
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 1 2"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label3"
+				"text": "Scale"
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 0 3"
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "scaleField"
+				"text": "1"
+				"minimumSize": new java.awt.Dimension( 20, 22 )
+				auxiliary() {
+					"JavaCodeGenerator.variableModifiers": 1
+				}
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 1 3"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label4"
+				"text": "Offset"
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 0 4"
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "offsetField"
+				"text": "0"
+				"minimumSize": new java.awt.Dimension( 20, 22 )
+				auxiliary() {
+					"JavaCodeGenerator.variableModifiers": 1
+				}
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 1 4"
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 5, 0 )
+			"size": new java.awt.Dimension( 200, 125 )
+		} )
+	}
+}
