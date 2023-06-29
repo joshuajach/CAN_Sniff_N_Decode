@@ -35,7 +35,7 @@ public class CanValue extends JPanel {
             double scaledData = rawData * varInfo.scale + varInfo.offset;
 
             valueLabel.setText(String.valueOf(scaledData));
-        }catch (NumberFormatException ignored){
+        }catch (Exception ignored){
         }
     }
     public void updateGraph() {

@@ -18,7 +18,7 @@ public class CanSniff {
     final TreeMap<Integer, ArrayList<CanMsg>> canMsgsMap = new TreeMap<>();
     final ArrayList<MainFrame> mainFrames = new ArrayList<>();
     FileWriter csvWriter;
-    final File csvFile = new File(Paths.get("").toAbsolutePath() + "\\CanData.csv");
+    final File csvFile = new File(Paths.get("").toAbsolutePath() + "\\CanData_"+System.currentTimeMillis()+".csv");
 
     public CanSniff() {
 
@@ -180,9 +180,9 @@ public class CanSniff {
                             csvWriter = new FileWriter(csvFile, true);
                             StringBuilder line = new StringBuilder(temp.timeStamp + "," + temp.id + "," + temp.length);
                             for (int j = 0; j < 8; j++) {
-                                line.append(",").append(line).append(bytes[j]);
+                                line.append(",").append(String.valueOf(bytes[j]));
                             }
-                            line.append("\n");
+                            line.append("\r\n");
                             csvWriter.write(line.toString());
                             csvWriter.close();
 

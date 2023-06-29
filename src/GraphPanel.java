@@ -85,15 +85,18 @@ public class GraphPanel extends JPanel {
     public void setGraph(ArrayList<CanMsg> canMsgs, CanValue.VarDetails varInfo) {
         this.canMsgs = canMsgs;
         this.varInfo = varInfo;
-        double value = getTransformedData(canMsgs.size() - 1);
-        min = max = value;
+        try {
+            double value = getTransformedData(canMsgs.size() - 1);
+            min = max = value;
 
-        for (int i = canMsgs.size() - 2; (i > canMsgs.size() - 2000) && i >= 0; i--) {
-            value = getTransformedData(i);
-            if (value < min) min = value;
-            if (value > max) max = value;
-        }
-        updateGraph();
+            for (int i = canMsgs.size() - 2; (i > canMsgs.size() - 2000) && i >= 0; i--) {
+                value = getTransformedData(i);
+                if (value < min) min = value;
+                if (value > max) max = value;
+            }
+            updateGraph();
+        }catch (NullPointerException ignored) {}
+
     }
 
     public void updateGraph() {
