@@ -14,7 +14,7 @@ public class GraphPanel extends JPanel {
     CanValue.VarDetails varInfo;
     double min = 1000000;
     double max = -1000000;
-    long scrollHistory = 60000;
+    final long scrollHistory = 60000;
 
     public GraphPanel() {
         initComponents();
@@ -36,30 +36,17 @@ public class GraphPanel extends JPanel {
             int offY = pSize.height - (int) ((-min) * scaleY);
 
             long timeOffset = currentTime - scrollHistory;
-            int x1; // = (int) ((dataLog.getTimeAtIndex(drawIndex)-timeOffset)* scaleX) ;
-            int x2; //= 0;
-            int y1; //= pSize.height - (int) (dataLog.getValueAtIndex(drawIndex).floatValue() * scaleY);
-            int y2; //= 0;
-
+            int x1;
+            int x2;
+            int y1;
+            int y2;
             g.setColor(Color.GREEN);
             g.drawLine(0, offY, pSize.width, offY); //draw zero line
 
-        /*if (Beans.isDesignTime()) { //Prevents GUI Builder from lagging
-            return;
-        }*/
-            g.setColor(Color.blue);
-
             //Draw scrolling graph with 2 minute history
-
-            x1 = (int) ((canMsgs.get(drawIndex).timeStamp - timeOffset) * scaleX);
-            x2 = 0;
-            y1 = offY - (int) (getTransformedData(drawIndex) * scaleY);
-            y2 = 0;
             g.setColor(Color.BLACK);
             String currentValue = "Data: " + getTransformedData(drawIndex);
             g.drawString(currentValue, pSize.width - fontMetrics.stringWidth(currentValue) - 5, 25);//draws current value
-
-
             //draw history
             while (drawIndex > 0 && currentTime - canMsgs.get(drawIndex).timeStamp < scrollHistory) {
                 try {
@@ -68,14 +55,11 @@ public class GraphPanel extends JPanel {
                     y1 = offY - (int) (getTransformedData(drawIndex) * scaleY);
                     y2 = offY - (int) (getTransformedData(drawIndex - 1) * scaleY);
                     g.drawLine(x1, y1, x2, y2);
-
-                } catch (Exception e) {
+                } catch (Exception ignored) {
                 }
-
                 drawIndex--;
             }
-        } catch (Exception e) {
-            //e.printStackTrace();
+        } catch (Exception ignored) {
         }
     }
 
@@ -117,19 +101,16 @@ public class GraphPanel extends JPanel {
             double value = getTransformedData(canMsgs.size() - 1);
             if (value < min) min = value;
             if (value > max) max = value;
-        } catch (NullPointerException e) {
-        }
-        ;
+        } catch (NullPointerException ignored) {}
         repaint();
     }
 
     public double getTransformedData(int index) {
         long rawData = (canMsgs.get(index).data >> varInfo.bitStart) & ((1L << varInfo.bitLength) - 1);
-        if ((rawData & (1 << (varInfo.bitLength))) > 1) { //type cast correction for negative numbers. This assumes that all incoming data is signed
+        if ((rawData & (1L << (varInfo.bitLength))) > 1) { //type cast correction for negative numbers. This assumes that all incoming data is signed
             rawData = rawData | -1L << varInfo.bitLength;
         }
-        double scaledData = rawData * varInfo.scale + varInfo.offset;
-        return scaledData;
+        return rawData * varInfo.scale + varInfo.offset;
     }
 
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables  @formatter:off

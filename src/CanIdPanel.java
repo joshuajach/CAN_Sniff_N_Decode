@@ -11,6 +11,7 @@ import net.miginfocom.swing.*;
 /**
  * @author josh
  */
+@SuppressWarnings("rawtypes")
 public class CanIdPanel extends JPanel {
     public boolean newIDSelected = false;
     ArrayList<CanMsg> canMsgs;
@@ -22,7 +23,7 @@ public class CanIdPanel extends JPanel {
         canValue4.bitStartField.setText("48");
     }
 
-    private void CanIdSelectBox(ActionEvent e) {
+    private void CanIdSelectBox(ActionEvent ignoredE) {
         // TODO add your code here
         newIDSelected = true;
     }
@@ -42,27 +43,23 @@ public class CanIdPanel extends JPanel {
         canValue3.calculateCurrentValue();
         canValue4.calculateCurrentValue();
 
-        String label ="";
+        StringBuilder label = new StringBuilder();
         int index = canMsgs.size()-1;
         long data = canMsgs.get(index).data;
         for(int i=0;i<canMsgs.get(index).length;i++) {
-            label = String.format(" x%02X",data & 0xFF)+label;
+            label.insert(0, String.format(" x%02X", data & 0xFF));
             data = data >> 8;
         }
-        dataPackLabel.setText(label);
+        dataPackLabel.setText(label.toString());
     }
-    public void setGraphs(ArrayList<CanMsg> canMsgs) {
-        canValue1.setGraph(canMsgs);
-        canValue2.setGraph(canMsgs);
-        canValue3.setGraph(canMsgs);
-        canValue4.setGraph(canMsgs);
-    }
+
     public void updateGraphs() {
         canValue1.updateGraph();
         canValue2.updateGraph();
         canValue3.updateGraph();
         canValue4.updateGraph();
     }
+    @SuppressWarnings({"rawtypes", "Convert2MethodRef" })
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
         // Generated using JFormDesigner non-commercial license

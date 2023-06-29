@@ -13,8 +13,8 @@ import javax.swing.*;
  * @author josh
  */
 public class MainFrame extends JFrame {
-    TreeMap<Integer, ArrayList<CanMsg>> canMsgsMap;
-    ArrayList<MainFrame> mainFrames = new ArrayList<>();
+    final TreeMap<Integer, ArrayList<CanMsg>> canMsgsMap;
+    final ArrayList<MainFrame> mainFrames;
     public MainFrame(TreeMap<Integer, ArrayList<CanMsg>> canMsgsMap, ArrayList<MainFrame> mainFrames) {
         initComponents();
         this.canMsgsMap = canMsgsMap;
@@ -26,29 +26,28 @@ public class MainFrame extends JFrame {
     public void rebuildCanIdSelectBox() {
         int currentSelection = canIdPanel.CanIdSelectBox.getSelectedItem()!=null?(int)canIdPanel.CanIdSelectBox.getSelectedItem():0;
         canIdPanel.CanIdSelectBox.removeAllItems();
-        for (Integer canId : canMsgsMap.keySet()) {
+        for (Integer canId : canMsgsMap.keySet()) //noinspection unchecked
             canIdPanel.CanIdSelectBox.addItem(canId);
-        }
         canIdPanel.CanIdSelectBox.setSelectedItem(currentSelection);
     }
+
     public void updateFrame(int id) {
+        //noinspection DataFlowIssue
         if ((int)canIdPanel.CanIdSelectBox.getSelectedItem() == id) {
-            int lastIndex = canMsgsMap.get(id).size();
-            CanMsg canData = canMsgsMap.get(id).get(lastIndex - 1);
             canIdPanel.setCurrentValues(canMsgsMap.get(id));
             canIdPanel.updateGraphs();
         }
     }
 
 
-    private void addFrame(ActionEvent e) {
+    private void addFrame(ActionEvent ignoredE) {
         MainFrame mainFrame = new MainFrame(canMsgsMap, mainFrames);
         mainFrames.add(mainFrame);
         mainFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         java.awt.EventQueue.invokeLater(() -> mainFrame.setVisible(true));
     }
 
-    private void closeFrame(ActionEvent e) {
+    private void closeFrame(ActionEvent ignoredE) {
         //mainFrame.setVisible(false);
         mainFrames.remove(this);
         if(mainFrames.size()==0){
@@ -59,14 +58,11 @@ public class MainFrame extends JFrame {
     private void startTimerTask() {
         ActionListener taskPerformer = e -> {
             //calculates values for each canValue panel
-            if(canIdPanel.newIDSelected==true) {
+            if(canIdPanel.newIDSelected) {
                 canIdPanel.newIDSelected=false;
                 if (canIdPanel.CanIdSelectBox.getSelectedItem() != null) {
                     int canId = (int) canIdPanel.CanIdSelectBox.getSelectedItem();
-                    int lastIndex = canMsgsMap.get(canId).size();
-                    //CanMsg canData = canMsgsMap.get(canId).get(lastIndex - 1);
                     canIdPanel.setCurrentValues(canMsgsMap.get(canId));
-                    //canIdPanel.calculateCurrentValues();
                 }
             }
             canIdPanel.repaint();
@@ -75,12 +71,13 @@ public class MainFrame extends JFrame {
         new Timer(100, taskPerformer).start();
     }
 
-    private void thisWindowClosed(WindowEvent e) {
+    private void thisWindowClosed(WindowEvent ignoredE) {
         mainFrames.remove(this);
         if(mainFrames.size()==0){
             System.exit(1);
         }
     }
+    @SuppressWarnings("Convert2MethodRef")
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
         // Generated using JFormDesigner non-commercial license

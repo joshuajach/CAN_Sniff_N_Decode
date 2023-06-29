@@ -1,10 +1,9 @@
-import java.awt.*;
-import java.awt.event.*;
-import java.util.ArrayList;
+import net.miginfocom.swing.MigLayout;
 import javax.swing.*;
-import javax.swing.border.*;
-import javax.swing.event.*;
-import net.miginfocom.swing.*;
+import javax.swing.border.LineBorder;
+import javax.swing.event.CaretEvent;
+import java.awt.*;
+import java.util.ArrayList;
 /*
  * Created by JFormDesigner on Tue Jun 27 21:19:22 CDT 2023
  */
@@ -15,7 +14,7 @@ import net.miginfocom.swing.*;
  * @author josh
  */
 public class CanValue extends JPanel {
-    VarDetails varInfo = new VarDetails(0, 16, 1.0, 0.0);
+    final VarDetails varInfo = new VarDetails(0, 16, 1.0, 0.0);
     ArrayList<CanMsg> canMsgs;
     public CanValue() {
         initComponents();
@@ -30,13 +29,13 @@ public class CanValue extends JPanel {
             varInfo.offset = Double.parseDouble(!offsetField.getText().isEmpty() ? offsetField.getText() : "0.0");
 
             long rawData = (canMsgs.get(canMsgs.size()-1).data >> varInfo.bitStart) & ((1L << varInfo.bitLength) - 1);
-            if ((rawData & (1 << (varInfo.bitLength))) > 1) { //type cast correction for negative numbers. This assumes that all incoming data is signed
+            if ((rawData & (1L << (varInfo.bitLength))) > 1) { //type cast correction for negative numbers. This assumes that all incoming data is signed
                 rawData = rawData | -1L << varInfo.bitLength;
             }
             double scaledData = rawData * varInfo.scale + varInfo.offset;
 
             valueLabel.setText(String.valueOf(scaledData));
-        }catch (NumberFormatException e){
+        }catch (NumberFormatException ignored){
         }
     }
     public void updateGraph() {
@@ -48,27 +47,27 @@ public class CanValue extends JPanel {
         graphPanel.setGraph(canMsgs,varInfo);
     }
 
-    private void bitStartFieldCaretUpdate(CaretEvent e) {
+    private void bitStartFieldCaretUpdate(CaretEvent ignoredE) {
         calculateCurrentValue();
         setGraph(canMsgs);
     }
 
-    private void bitLengthFieldCaretUpdate(CaretEvent e) {
+    private void bitLengthFieldCaretUpdate(CaretEvent ignoredE) {
         calculateCurrentValue();
         setGraph(canMsgs);
     }
 
-    private void scaleFieldCaretUpdate(CaretEvent e) {
+    private void scaleFieldCaretUpdate(CaretEvent ignoredE) {
         calculateCurrentValue();
         setGraph(canMsgs);
     }
 
-    private void offsetFieldCaretUpdate(CaretEvent e) {
+    private void offsetFieldCaretUpdate(CaretEvent ignoredE) {
         calculateCurrentValue();
         setGraph(canMsgs);
     }
 
-    public class VarDetails{
+    public static class VarDetails{
         public int bitStart;
         public int bitLength;
         public double scale;
@@ -80,6 +79,7 @@ public class CanValue extends JPanel {
             this.offset = offset;
         }
     }
+    @SuppressWarnings("Convert2MethodRef")
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
         // Generated using JFormDesigner non-commercial license
