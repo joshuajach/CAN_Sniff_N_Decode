@@ -1,4 +1,3 @@
-import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 import javax.swing.*;
@@ -13,6 +12,8 @@ import net.miginfocom.swing.*;
  * @author josh
  */
 public class CanIdPanel extends JPanel {
+    public boolean newIDSelected = false;
+    ArrayList<CanMsg> canMsgs;
     public CanIdPanel() {
         initComponents();
         canValue1.bitStartField.setText("0");
@@ -23,28 +24,45 @@ public class CanIdPanel extends JPanel {
 
     private void CanIdSelectBox(ActionEvent e) {
         // TODO add your code here
+        newIDSelected = true;
+    }
+    public void setCurrentValues(ArrayList<CanMsg> canMsgs) {
+        this.canMsgs = canMsgs;
+        canValue1.setGraph(canMsgs);
+        canValue2.setGraph(canMsgs);
+        canValue3.setGraph(canMsgs);
+        canValue4.setGraph(canMsgs);
+        calculateCurrentValues();
     }
 
-    public void calculateCurrentValue(CanMsg canMsg){
+    public void calculateCurrentValues(){
 
-        canValue1.calculateCurrentValue(canMsg);
-        canValue2.calculateCurrentValue(canMsg);
-        canValue3.calculateCurrentValue(canMsg);
-        canValue4.calculateCurrentValue(canMsg);
+        canValue1.calculateCurrentValue();
+        canValue2.calculateCurrentValue();
+        canValue3.calculateCurrentValue();
+        canValue4.calculateCurrentValue();
 
         String label ="";
-        long data = canMsg.data;
-        for(int i=0;i<canMsg.length;i++) {
-
+        int index = canMsgs.size()-1;
+        long data = canMsgs.get(index).data;
+        for(int i=0;i<canMsgs.get(index).length;i++) {
             label = String.format(" x%02X",data & 0xFF)+label;
             data = data >> 8;
-
         }
-
-
         dataPackLabel.setText(label);
     }
-
+    public void setGraphs(ArrayList<CanMsg> canMsgs) {
+        canValue1.setGraph(canMsgs);
+        canValue2.setGraph(canMsgs);
+        canValue3.setGraph(canMsgs);
+        canValue4.setGraph(canMsgs);
+    }
+    public void updateGraphs() {
+        canValue1.updateGraph();
+        canValue2.updateGraph();
+        canValue3.updateGraph();
+        canValue4.updateGraph();
+    }
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
         // Generated using JFormDesigner non-commercial license

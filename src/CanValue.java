@@ -1,6 +1,9 @@
 import java.awt.*;
+import java.awt.event.*;
+import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.border.*;
+import javax.swing.event.*;
 import net.miginfocom.swing.*;
 /*
  * Created by JFormDesigner on Tue Jun 27 21:19:22 CDT 2023
@@ -12,25 +15,71 @@ import net.miginfocom.swing.*;
  * @author josh
  */
 public class CanValue extends JPanel {
+    VarDetails varInfo = new VarDetails(0, 16, 1.0, 0.0);
+    ArrayList<CanMsg> canMsgs;
     public CanValue() {
         initComponents();
     }
 
-    public void calculateCurrentValue(CanMsg canMsg) {
-        int bitStart = Integer.parseInt(bitStartField.getText());
-        int bitLength = Integer.parseInt(bitLengthField.getText());
-        double scale = Double.parseDouble(scaleField.getText());
-        double offset = Double.parseDouble(offsetField.getText());
 
-        long rawData = (canMsg.data >> bitStart) & ((1L << bitLength) - 1);
-        if((rawData & (1<<(bitLength)))>1){ //type cast correction for negative numbers. This assumes that all incoming data is signed
-            rawData = rawData | -1L << bitLength;
+    public void calculateCurrentValue() {
+        try {
+            varInfo.bitStart = Integer.parseInt(!bitStartField.getText().isEmpty() ? bitStartField.getText() : "0");
+            varInfo.bitLength = Integer.parseInt(!bitLengthField.getText().isEmpty() ? bitLengthField.getText() : "16");
+            varInfo.scale = Double.parseDouble(!scaleField.getText().isEmpty() ? scaleField.getText() : "1.0");
+            varInfo.offset = Double.parseDouble(!offsetField.getText().isEmpty() ? offsetField.getText() : "0.0");
+
+            long rawData = (canMsgs.get(canMsgs.size()-1).data >> varInfo.bitStart) & ((1L << varInfo.bitLength) - 1);
+            if ((rawData & (1 << (varInfo.bitLength))) > 1) { //type cast correction for negative numbers. This assumes that all incoming data is signed
+                rawData = rawData | -1L << varInfo.bitLength;
+            }
+            double scaledData = rawData * varInfo.scale + varInfo.offset;
+
+            valueLabel.setText(String.valueOf(scaledData));
+        }catch (NumberFormatException e){
         }
-        double scaledData = rawData * scale + offset;
-
-        valueLabel.setText(String.valueOf(scaledData));
+    }
+    public void updateGraph() {
+        graphPanel.updateGraph();
     }
 
+    public void setGraph(ArrayList<CanMsg> canMsgs) {
+        this.canMsgs = canMsgs;
+        graphPanel.setGraph(canMsgs,varInfo);
+    }
+
+    private void bitStartFieldCaretUpdate(CaretEvent e) {
+        calculateCurrentValue();
+        setGraph(canMsgs);
+    }
+
+    private void bitLengthFieldCaretUpdate(CaretEvent e) {
+        calculateCurrentValue();
+        setGraph(canMsgs);
+    }
+
+    private void scaleFieldCaretUpdate(CaretEvent e) {
+        calculateCurrentValue();
+        setGraph(canMsgs);
+    }
+
+    private void offsetFieldCaretUpdate(CaretEvent e) {
+        calculateCurrentValue();
+        setGraph(canMsgs);
+    }
+
+    public class VarDetails{
+        public int bitStart;
+        public int bitLength;
+        public double scale;
+        public double offset;
+        public VarDetails(int bitStart, int bitLength, double scale, double offset) {
+            this.bitStart = bitStart;
+            this.bitLength = bitLength;
+            this.scale = scale;
+            this.offset = offset;
+        }
+    }
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
         // Generated using JFormDesigner non-commercial license
@@ -38,7 +87,7 @@ public class CanValue extends JPanel {
         valueLabel = new JLabel();
         label1 = new JLabel();
         bitStartField = new JTextField();
-        graphPanel = new JPanel();
+        graphPanel = new GraphPanel();
         label2 = new JLabel();
         bitLengthField = new JTextField();
         label3 = new JLabel();
@@ -81,22 +130,8 @@ public class CanValue extends JPanel {
         //---- bitStartField ----
         bitStartField.setText("0");
         bitStartField.setMinimumSize(new Dimension(20, 22));
+        bitStartField.addCaretListener(e -> bitStartFieldCaretUpdate(e));
         add(bitStartField, "cell 1 1");
-
-        //======== graphPanel ========
-        {
-
-            GroupLayout graphPanelLayout = new GroupLayout(graphPanel);
-            graphPanel.setLayout(graphPanelLayout);
-            graphPanelLayout.setHorizontalGroup(
-                graphPanelLayout.createParallelGroup()
-                    .addGap(0, 88, Short.MAX_VALUE)
-            );
-            graphPanelLayout.setVerticalGroup(
-                graphPanelLayout.createParallelGroup()
-                    .addGap(0, 101, Short.MAX_VALUE)
-            );
-        }
         add(graphPanel, "cell 2 1 2 5,dock center");
 
         //---- label2 ----
@@ -106,6 +141,7 @@ public class CanValue extends JPanel {
         //---- bitLengthField ----
         bitLengthField.setText("16");
         bitLengthField.setMinimumSize(new Dimension(20, 22));
+        bitLengthField.addCaretListener(e -> bitLengthFieldCaretUpdate(e));
         add(bitLengthField, "cell 1 2");
 
         //---- label3 ----
@@ -115,6 +151,7 @@ public class CanValue extends JPanel {
         //---- scaleField ----
         scaleField.setText("1");
         scaleField.setMinimumSize(new Dimension(20, 22));
+        scaleField.addCaretListener(e -> scaleFieldCaretUpdate(e));
         add(scaleField, "cell 1 3");
 
         //---- label4 ----
@@ -124,6 +161,7 @@ public class CanValue extends JPanel {
         //---- offsetField ----
         offsetField.setText("0");
         offsetField.setMinimumSize(new Dimension(20, 22));
+        offsetField.addCaretListener(e -> offsetFieldCaretUpdate(e));
         add(offsetField, "cell 1 4");
         // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
     }
@@ -134,7 +172,7 @@ public class CanValue extends JPanel {
     public JLabel valueLabel;
     private JLabel label1;
     public JTextField bitStartField;
-    private JPanel graphPanel;
+    private GraphPanel graphPanel;
     private JLabel label2;
     public JTextField bitLengthField;
     private JLabel label3;

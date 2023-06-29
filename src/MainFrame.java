@@ -1,7 +1,7 @@
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
-import java.util.Map;
+import java.util.TreeMap;
 import javax.swing.*;
 /*
  * Created by JFormDesigner on Tue Jun 27 21:14:40 CDT 2023
@@ -13,9 +13,9 @@ import javax.swing.*;
  * @author josh
  */
 public class MainFrame extends JFrame {
-    Map<Integer, ArrayList<CanMsg>> canMsgsMap;
+    TreeMap<Integer, ArrayList<CanMsg>> canMsgsMap;
     ArrayList<MainFrame> mainFrames = new ArrayList<>();
-    public MainFrame(Map<Integer, ArrayList<CanMsg>> canMsgsMap, ArrayList<MainFrame> mainFrames) {
+    public MainFrame(TreeMap<Integer, ArrayList<CanMsg>> canMsgsMap, ArrayList<MainFrame> mainFrames) {
         initComponents();
         this.canMsgsMap = canMsgsMap;
         this.mainFrames = mainFrames;
@@ -24,9 +24,19 @@ public class MainFrame extends JFrame {
     }
     //rebuild CanIdSelectBox
     public void rebuildCanIdSelectBox() {
+        int currentSelection = canIdPanel.CanIdSelectBox.getSelectedItem()!=null?(int)canIdPanel.CanIdSelectBox.getSelectedItem():0;
         canIdPanel.CanIdSelectBox.removeAllItems();
         for (Integer canId : canMsgsMap.keySet()) {
             canIdPanel.CanIdSelectBox.addItem(canId);
+        }
+        canIdPanel.CanIdSelectBox.setSelectedItem(currentSelection);
+    }
+    public void updateFrame(int id) {
+        if ((int)canIdPanel.CanIdSelectBox.getSelectedItem() == id) {
+            int lastIndex = canMsgsMap.get(id).size();
+            CanMsg canData = canMsgsMap.get(id).get(lastIndex - 1);
+            canIdPanel.setCurrentValues(canMsgsMap.get(id));
+            canIdPanel.updateGraphs();
         }
     }
 
@@ -49,14 +59,18 @@ public class MainFrame extends JFrame {
     private void startTimerTask() {
         ActionListener taskPerformer = e -> {
             //calculates values for each canValue panel
-            if (canIdPanel.CanIdSelectBox.getSelectedItem() !=null) {
-                int canId = (int) canIdPanel.CanIdSelectBox.getSelectedItem();
-                int lastIndex = canMsgsMap.get(canId).size();
-                CanMsg canData = canMsgsMap.get(canId).get(lastIndex - 1);
-                canIdPanel.calculateCurrentValue(canData);
+            if(canIdPanel.newIDSelected==true) {
+                canIdPanel.newIDSelected=false;
+                if (canIdPanel.CanIdSelectBox.getSelectedItem() != null) {
+                    int canId = (int) canIdPanel.CanIdSelectBox.getSelectedItem();
+                    int lastIndex = canMsgsMap.get(canId).size();
+                    //CanMsg canData = canMsgsMap.get(canId).get(lastIndex - 1);
+                    canIdPanel.setCurrentValues(canMsgsMap.get(canId));
+                    //canIdPanel.calculateCurrentValues();
+                }
             }
-
-            repaint();
+            canIdPanel.repaint();
+            this.repaint();
         };
         new Timer(100, taskPerformer).start();
     }
